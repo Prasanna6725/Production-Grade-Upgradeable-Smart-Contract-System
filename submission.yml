@@ -1,0 +1,78 @@
+setup:
+  - npm install
+
+test:
+  - npm test
+
+compile:
+  - npm run compile
+
+coverage:
+  - npm run test:coverage
+
+verify_structure:
+  - test -f contracts/TokenVaultV1.sol && echo "V1 contract exists"
+  - test -f contracts/TokenVaultV2.sol && echo "V2 contract exists"
+  - test -f contracts/TokenVaultV3.sol && echo "V3 contract exists"
+  - test -f contracts/mocks/MockERC20.sol && echo "Mock token exists"
+  - test -f test/TokenVaultV1.test.js && echo "V1 tests exist"
+  - test -f test/upgrade-v1-to-v2.test.js && echo "V1-V2 upgrade tests exist"
+  - test -f test/upgrade-v2-to-v3.test.js && echo "V2-V3 upgrade tests exist"
+  - test -f test/security.test.js && echo "Security tests exist"
+
+required_functions:
+  TokenVaultV1:
+    - initialize
+    - deposit
+    - withdraw
+    - balanceOf
+    - totalDeposits
+    - getDepositFee
+    - getImplementationVersion
+  TokenVaultV2:
+    - setYieldRate
+    - getYieldRate
+    - claimYield
+    - getUserYield
+    - pauseDeposits
+    - unpauseDeposits
+    - isDepositsPaused
+  TokenVaultV3:
+    - emergencyWithdraw
+    - setWithdrawalDelay
+    - getWithdrawalDelay
+    - requestWithdrawal
+    - executeWithdrawal
+    - getWithdrawalRequest
+
+required_tests:
+  TokenVaultV1.test.js:
+    - "should initialize with correct parameters"
+    - "should allow deposits and update balances"
+    - "should deduct deposit fee correctly"
+    - "should allow withdrawals and update balances"
+    - "should prevent withdrawal of more than balance"
+    - "should prevent reinitialization"
+  upgrade-v1-to-v2.test.js:
+    - "should preserve user balances after upgrade"
+    - "should preserve total deposits after upgrade"
+    - "should maintain admin access control after upgrade"
+    - "should allow setting yield rate in V2"
+    - "should calculate yield correctly"
+    - "should prevent non-admin from setting yield rate"
+    - "should allow pausing deposits in V2"
+  upgrade-v2-to-v3.test.js:
+    - "should preserve all V2 state after upgrade"
+    - "should allow setting withdrawal delay"
+    - "should handle withdrawal requests correctly"
+    - "should enforce withdrawal delay"
+    - "should allow emergency withdrawals"
+    - "should prevent premature withdrawal execution"
+  security.test.js:
+    - "should prevent direct initialization of implementation contracts"
+    - "should prevent unauthorized upgrades"
+    - "should use storage gaps for future upgrades"
+    - "should not have storage layout collisions across versions"
+    - "should prevent function selector clashing"
+
+coverage_minimum: 90
