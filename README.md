@@ -245,7 +245,7 @@ function getWithdrawalRequest(address user) external view returns (uint256 amoun
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/Prasanna6725/Production-Grade-Upgradeable-Smart-Contract-System.git
 cd Production-Grade-Upgradeable-Smart-Contract-System
 
 # Install dependencies
